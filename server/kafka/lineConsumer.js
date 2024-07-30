@@ -1,45 +1,28 @@
-// const { kafka } = require("./client");
-
-
-// async function line() {
-//   const consumer = kafka.consumer({ groupId: "dice" });
-//   await consumer.connect();
-
-//   await consumer.subscribe({ topics: ["dice-roll"] });
-
-//   await consumer.run({
-//     eachMessage: async ({ topic, partition, message, heartbeat, pause }) => {
-//       console.log(
-//         ` [${topic}]: PART:${partition}:`,
-//         message.value.toString()
-//       );
-//     },
-//   });
-// }
-
-// line();
 const { kafka } = require("./client");
 
 async function line() {
-  const consumer = kafka.consumer({ groupId: "dice" });
-
+  const consumer = kafka.consumer({ groupId: "line" });
+  
   try {
     await consumer.connect();
-    console.log("Consumer connected");
+    console.log("Consumer connected successfully");
 
-    await consumer.subscribe({ topic: "dice-roll", fromBeginning: true });
-    console.log("Subscribed to topic");
+    await consumer.subscribe({ topics: ["dice-roll"], fromBeginning: true });
+    console.log("Subscribed to topic 'dice-roll'");
 
     await consumer.run({
-      eachMessage: async ({ topic, partition, message }) => {
-        console.log(
-          `Received message: [${topic}]: PART:${partition}: ${message.value.toString()}`
-        );
+      eachMessage: async ({ topic, partition, message, heartbeat, pause }) => {
+        console.log("Received message:");
+        console.log(`Topic: ${topic}, Partition: ${partition}`);
+        console.log(`Message value: ${message.value.toString()}`);
+        console.log("--------------------");
       },
     });
-  } catch (err) {
-    console.error("Error in consumer:", err);
+
+    console.log("Consumer is now running and listening for messages");
+  } catch (error) {
+    console.error("Error in consumer:", error);
   }
 }
 
-line();
+line().catch(console.error);

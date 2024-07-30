@@ -1,36 +1,3 @@
-// const { kafka } = require("./client.js");
-
-
-
-// async function init() {
-//   const producer = kafka.producer();
-
-//   console.log("Connecting Producer");
-//   await producer.connect();
-//   console.log("Producer Connected Successfully");
-//     var sequence = 1;
-    
-//     setInterval(async ()=>{
-//         sequence ++;
-//         const a = Math.floor(Math.random() * 6) + 1;
-//         await producer.send({
-//             topic: "dice-roll",
-//       messages: [
-//         {
-//           partition:1,
-//           key: "dice-output",
-//           value: JSON.stringify({sequence, output : a }),
-//         },
-//       ]
-//         });
-//     } , 1000);
-    
-    
-    
-//     await producer.disconnect();;
-// }
-// init()
-
 const { kafka } = require("./client.js");
 
 async function init() {
@@ -51,7 +18,6 @@ async function init() {
           topic: "dice-roll",
           messages: [
             {
-              partition: 1,
               key: "dice-output",
               value: JSON.stringify({ sequence, output: a }),
             },
@@ -61,7 +27,7 @@ async function init() {
       } catch (err) {
         console.error("Error sending message:", err);
       }
-    }, 10000);
+    }, 1000);
   } catch (err) {
     console.error("Error connecting producer:", err);
   }
