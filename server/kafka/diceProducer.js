@@ -1,4 +1,5 @@
-const { kafka } = require("./client.js");
+import { kafka } from "./client.js";
+
 
 async function init() {
   const producer = kafka.producer();

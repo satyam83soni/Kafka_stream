@@ -1,4 +1,4 @@
-const { kafka } = require("./client");
+import { kafka } from "./client.js";
 
 async function line() {
   const consumer = kafka.consumer({ groupId: "line" });

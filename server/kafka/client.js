@@ -1,4 +1,6 @@
-const {Kafka} =  require("kafkajs")
-exports.kafka = new Kafka({
+import { Kafka } from "kafkajs";
+const kafka = new Kafka({
     brokers: ['localhost:9092'],
   });
+
+  export {kafka}
