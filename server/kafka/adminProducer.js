@@ -6,19 +6,20 @@ async function init() {
   await admin.connect();
   console.log("Adming Connection Success...");
 
-  console.log("Creating Topic [rider-updates]");
+  console.log("Creating Topic [dice-roll]");
   await admin.createTopics({
     topics: [
       {
-        topic: "rider-updates",
-        numPartitions: 2,
+        partition : 1,
+        topic: "dice-roll",
+        numPartitions: 1,
       },
     ],
   });
-  console.log("Topic Created Success [rider-updates]");
+  console.log("Topic Created Success [dice-roll]");
 
   console.log("Disconnecting Admin..");
   await admin.disconnect();
 }
 
-init();
+init()
