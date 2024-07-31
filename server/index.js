@@ -6,6 +6,9 @@ import bar from './kafka/barConsumer.js';
 import line from './kafka/lineConsumer.js';
 import { connectDB } from './utils/features.js';
 import 'dotenv/config'
+import { init } from './kafka/diceProducer.js';
+import { admin } from './kafka/adminProducer.js';
+
 
 const app = express();
 const server = createServer(app);
@@ -32,15 +35,21 @@ io.on("connection", (socket) => {
 
   });
 });
-
-bar().catch(console.error);
-line().catch(console.error);
+await admin().catch(console.error);
+ bar().catch(console.error);
+ line().catch(console.error);
 
 const port = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
+
+app.get("/generate" , async (req , res)=>{
+    const times = req.query.times;
+    await init(times);
+    res.status(200).json({msg : "Succesfully started"});
+})
 
 server.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
