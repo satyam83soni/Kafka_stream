@@ -9,6 +9,7 @@
 - **Frontend Client :** A React application built with TypeScript.
 - **Kafka :** A distributed streaming platform for handling real-time data.
 - **Zookeeper :** Manages Kafka broker metadata and configuration.
+- **Docker:** Containerizedwhole server in container with docker-compose.
 
   
 ## Run Locally
