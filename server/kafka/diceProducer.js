@@ -28,7 +28,7 @@ async function init() {
       } catch (err) {
         console.error("Error sending message:", err);
       }
-    }, 1000);
+    }, 5000);
   } catch (err) {
     console.error("Error connecting producer:", err);
   }

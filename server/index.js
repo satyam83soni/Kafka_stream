@@ -1,8 +1,13 @@
-import express from 'express'
-import { createServer } from 'http'
-import { Server } from 'socket.io'
-import cors from 'cors'
-const app = express()
+import express from 'express';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+import cors from 'cors';
+import bar from './kafka/barConsumer.js';
+import line from './kafka/lineConsumer.js';
+import { connectDB } from './utils/features.js';
+import 'dotenv/config'
+
+const app = express();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
@@ -10,6 +15,8 @@ const io = new Server(server, {
     methods: ["GET", "POST", "DELETE", "OPTIONS"],
   }
 });
+
+connectDB(process.env.MONGO_URL);
 
 app.set("io", io);
 
@@ -20,23 +27,23 @@ app.use(cors({
 
 io.on("connection", (socket) => {
   console.log("Connected: " + socket.id);
-
-  socket.to("hskdhfkjshj").emit("user-connected", socket.id);
-
   socket.on("disconnect", () => {
-    console.log("Disconnected: " + socket.user.name);
-    userSocketIDs.delete(user._id.toString());
+    console.log("Disconnected: " + socket.id);
+
   });
 });
 
-
+bar().catch(console.error);
+// line().catch(console.error);
 
 const port = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+  res.send('Hello World!');
+});
 
 server.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+  console.log(`Example app listening on port ${port}`);
+});
+
+export { io };
