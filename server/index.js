@@ -6,8 +6,11 @@ import bar from './kafka/barConsumer.js';
 import line from './kafka/lineConsumer.js';
 import { connectDB } from './utils/features.js';
 import 'dotenv/config'
-import { init } from './kafka/diceProducer.js';
+import { init , stop } from './kafka/diceProducer.js';
 import { admin } from './kafka/adminProducer.js';
+import DiceRoll from './model/dicerole.js';
+import DiceStats from './model/dicestats.js';
+
 
 
 const app = express();
@@ -50,6 +53,21 @@ app.get("/generate" , async (req , res)=>{
     await init(times);
     res.status(200).json({msg : "Succesfully started"});
 })
+
+app.get("/stop" , async (req , res)=>{
+  stop();
+  res.status(200).json({msg : "Succesfully stopped"});
+})
+
+app.get("/clear" , async (req , res)=>{
+  await DiceRoll.collection.drop()
+  await DiceStats.collection.drop()
+  res.status(200).json({msg : "Succesfully stopped"});
+})
+
+
+
+
 
 server.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
