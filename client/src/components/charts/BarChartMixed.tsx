@@ -1,3 +1,4 @@
+import { useMemo, useEffect, useState } from "react";
 import { TrendingUp } from "lucide-react";
 import { Bar, BarChart, XAxis, YAxis } from "recharts";
 
@@ -15,45 +16,73 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-const chartData = [
-  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-  { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
-  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-  { browser: "other", visitors: 90, fill: "var(--color-other)" },
+import { getSocket } from "@/socket";
+import { toASCII } from "punycode";
+
+const initialChartData = [
+  { result: "one", value: 4 },
+  { result: "two", value: 3 },
+  { result: "three", value: 6 },
+  { result: "four", value: 3 },
+  { result: "five", value: 2 },
+  { result: "six", value: 2 },
 ];
 
 const chartConfig = {
-  visitors: {
-    label: "Visitors",
-  },
-  chrome: {
-    label: "Chrome",
+  one: {
+    label: "One",
     color: "hsl(var(--chart-1))",
   },
-  safari: {
-    label: "Safari",
+  two: {
+    label: "Two",
     color: "hsl(var(--chart-2))",
   },
-  firefox: {
-    label: "Firefox",
+  three: {
+    label: "Three",
     color: "hsl(var(--chart-3))",
   },
-  edge: {
-    label: "Edge",
+  four: {
+    label: "Four",
     color: "hsl(var(--chart-4))",
   },
-  other: {
-    label: "Other",
+  five: {
+    label: "Five",
     color: "hsl(var(--chart-5))",
+  },
+  six: {
+    label: "Six",
+    color: "hsl(var(--chart-6))",
   },
 } satisfies ChartConfig;
 
+function transformSocketData(data) {
+  const keys = ["one", "two", "three", "four", "five", "six"];
+  return keys.map((key) => ({ result: key, value: data[key] }));
+}
+
 export function BarChartMixed() {
+  const [chartData, setChartData] = useState(initialChartData);
+  const [total, setTotal] = useState(0);
+
+  const socket = useMemo(() => getSocket(), []);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("DICE_STATS", (data) => {
+        console.log("Received data:", data);
+        setChartData(transformSocketData(data));
+        setTotal(data.total);
+      });
+    }
+    return () => {
+      socket?.off("DICE_STATS");
+    };
+  }, [socket]);
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Dice Frequency Distribution Chart </CardTitle>
+        <CardTitle>Dice Frequency Distribution Chart</CardTitle>
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent>
@@ -67,7 +96,7 @@ export function BarChartMixed() {
             }}
           >
             <YAxis
-              dataKey="browser"
+              dataKey="result"
               type="category"
               tickLine={false}
               tickMargin={10}
@@ -76,21 +105,22 @@ export function BarChartMixed() {
                 chartConfig[value as keyof typeof chartConfig]?.label
               }
             />
-            <XAxis dataKey="visitors" type="number" hide />
+            <XAxis dataKey="value" type="number" hide />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="visitors" layout="vertical" radius={5} />
+            <Bar dataKey="value" layout="vertical" radius={5} fill="#8884d8" />
           </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Showing total results for {total} dice rolls{" "}
+          <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+          Showing total results for {total} dice rolls
         </div>
       </CardFooter>
     </Card>
