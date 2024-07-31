@@ -1,6 +1,6 @@
 import { io } from "../index.js";
 import { kafka } from "./client.js";
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 import DiceStats from "../model/dicestats.js";
 
@@ -10,7 +10,13 @@ async function bar() {
   let diceStats = await DiceStats.findOne();
   if (!diceStats) {
     diceStats = new DiceStats({
-      one: 0, two: 0, three: 0, four: 0, five: 0, six: 0, total: 0
+      one: 0,
+      two: 0,
+      three: 0,
+      four: 0,
+      five: 0,
+      six: 0,
+      total: 0,
     });
     await diceStats.save();
   }
@@ -18,12 +24,12 @@ async function bar() {
   sendStatsToClient(diceStats);
 
   const outputMap = {
-    1: 'one',
-    2: 'two',
-    3: 'three',
-    4: 'four',
-    5: 'five',
-    6: 'six'
+    1: "one",
+    2: "two",
+    3: "three",
+    4: "four",
+    5: "five",
+    6: "six",
   };
 
   try {
@@ -44,11 +50,11 @@ async function bar() {
         if (statKey) {
           diceStats[statKey]++;
           diceStats.total++;
-          if(diceStats.total % 10 === 0) {
+          if (diceStats.total % 10 === 0) {
             console.log("Saving stats...");
             await diceStats.save();
           }
-          
+
           sendStatsToClient(diceStats);
         } else {
           console.error("Invalid output value:", output);
@@ -63,7 +69,7 @@ async function bar() {
 }
 
 function sendStatsToClient(diceStats) {
-  if (io && typeof io.emit === 'function') {
+  if (io && typeof io.emit === "function") {
     io.emit("DICE_STATS", {
       one: diceStats.one,
       two: diceStats.two,
@@ -71,7 +77,7 @@ function sendStatsToClient(diceStats) {
       four: diceStats.four,
       five: diceStats.five,
       six: diceStats.six,
-      total: diceStats.total
+      total: diceStats.total,
     });
   } else {
     console.error("io object is not properly initialized");

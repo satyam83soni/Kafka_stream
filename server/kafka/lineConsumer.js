@@ -1,6 +1,6 @@
 import { io } from "../index.js";
 import { kafka } from "./client.js";
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 import DiceRoll from "../model/dicerole.js";
 
@@ -22,7 +22,7 @@ async function line() {
 
         messageBuffer.push(messageValue);
 
-        if (io && typeof io.emit === 'function') {
+        if (io && typeof io.emit === "function") {
           io.emit("NEW_ROLL_LINE", messageValue);
           console.log("NEW_ROLL_LINE", messageValue);
         } else {
@@ -31,7 +31,7 @@ async function line() {
 
         if (messageBuffer.length >= batchSize) {
           await processBatch(messageBuffer);
-          messageBuffer = []; 
+          messageBuffer = [];
         }
       },
     });
@@ -49,7 +49,9 @@ async function processBatch(batch) {
     console.log(`Successfully inserted ${result.length} messages`);
   } catch (error) {
     if (error instanceof mongoose.Error.BulkWriteError) {
-      console.error(`Partially inserted ${error.insertedDocs.length} documents`);
+      console.error(
+        `Partially inserted ${error.insertedDocs.length} documents`
+      );
       console.error("Error processing batch:", error.message);
     } else {
       console.error("Error processing batch:", error);

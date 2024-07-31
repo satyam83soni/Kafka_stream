@@ -1,7 +1,6 @@
-
 import { kafka } from "./client.js";
 
-async function init() {
+async function admin() {
   const admin = kafka.admin();
   console.log("Admin connecting...");
   await admin.connect();
@@ -11,7 +10,7 @@ async function init() {
   await admin.createTopics({
     topics: [
       {
-        partition : 1,
+        partition: 1,
         topic: "dice-roll",
         numPartitions: 1,
       },
@@ -23,4 +22,4 @@ async function init() {
   await admin.disconnect();
 }
 
-init()
+export {admin};
