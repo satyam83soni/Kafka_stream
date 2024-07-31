@@ -18,7 +18,7 @@ import {
 import { getSocket } from "@/socket";
 import { useEffect, useState } from "react";
 
-const initialChartData = [];
+const initialChartData:any = [];
 
 const chartConfig = {
   value: {
@@ -33,7 +33,7 @@ export function LineChartDots() {
 
   useEffect(() => {
     if (socket) {
-      const handleNewRoll = (data) => {
+      const handleNewRoll = (data: any) => {
         console.log("Received data:", data);
 
         // Ensure the data is in the expected format
@@ -43,7 +43,7 @@ export function LineChartDots() {
           typeof data.output === "number"
         ) {
           // Map to chart data format
-          setChartData((prevData) => [
+          setChartData((prevData:any) => [
             ...prevData,
             { sequence: data.sequence, value: data.output },
           ]);

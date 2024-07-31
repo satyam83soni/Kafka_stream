@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { TrendingUp } from "lucide-react";
 import { Bar, BarChart, XAxis, YAxis } from "recharts";
 
@@ -54,7 +54,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-function transformSocketData(data) {
+function transformSocketData(data :any) {
   const keys = ["one", "two", "three", "four", "five", "six"];
   return keys.map((key) => ({ result: key, value: data[key] }));
 }
