@@ -17,15 +17,14 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { getSocket } from "@/socket";
-import { toASCII } from "punycode";
 
 const initialChartData = [
-  { result: "one", value: 4 },
-  { result: "two", value: 3 },
-  { result: "three", value: 6 },
-  { result: "four", value: 3 },
-  { result: "five", value: 2 },
-  { result: "six", value: 2 },
+  { result: "one", value: 0 },
+  { result: "two", value: 0 },
+  { result: "three", value: 0 },
+  { result: "four", value: 0 },
+  { result: "five", value: 0 },
+  { result: "six", value: 0 },
 ];
 
 const chartConfig = {
@@ -64,7 +63,7 @@ export function BarChartMixed() {
   const [chartData, setChartData] = useState(initialChartData);
   const [total, setTotal] = useState(0);
 
-  const socket = useMemo(() => getSocket(), []);
+  const socket = getSocket();
 
   useEffect(() => {
     if (socket) {

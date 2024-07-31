@@ -34,7 +34,7 @@ io.on("connection", (socket) => {
 });
 
 bar().catch(console.error);
-// line().catch(console.error);
+line().catch(console.error);
 
 const port = process.env.PORT || 3000;
 

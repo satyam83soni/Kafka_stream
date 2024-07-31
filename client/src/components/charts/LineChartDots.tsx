@@ -15,29 +15,57 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-];
+import { getSocket } from "@/socket";
+import { useEffect, useState } from "react";
+
+const initialChartData = [];
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "hsl(var(--chart-1))",
+  value: {
+    label: "Dice Output",
+    color: "hsl(var(--chart-4))",
   },
 } satisfies ChartConfig;
 
 export function LineChartDots() {
+  const [chartData, setChartData] = useState(initialChartData);
+  const socket = getSocket();
+
+  useEffect(() => {
+    if (socket) {
+      const handleNewRoll = (data) => {
+        console.log("Received data:", data);
+
+        // Ensure the data is in the expected format
+        if (
+          data &&
+          typeof data.sequence === "number" &&
+          typeof data.output === "number"
+        ) {
+          // Map to chart data format
+          setChartData((prevData) => [
+            ...prevData,
+            { sequence: data.sequence, value: data.output },
+          ]);
+        } else {
+          console.error("Unexpected data format:", data);
+        }
+      };
+
+      socket.on("NEW_ROLL_LINE", handleNewRoll);
+
+      return () => {
+        socket.off("NEW_ROLL_LINE", handleNewRoll);
+      };
+    }
+  }, [socket]);
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Area Chart - Linear</CardTitle>
+        <CardTitle>Dice Roll Outcomes Over Time</CardTitle>
         <CardDescription>
-          Showing total visitors for the last 6 months
+          Showing the outcomes of dice rolls in sequence
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -52,18 +80,18 @@ export function LineChartDots() {
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="sequence"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => `Roll ${value}`}
             />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent indicator="dot" hideLabel />}
             />
             <Area
-              dataKey="desktop"
+              dataKey="value"
               type="linear"
               fill="var(--color-desktop)"
               fillOpacity={0.4}
@@ -76,10 +104,11 @@ export function LineChartDots() {
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
             <div className="flex items-center gap-2 font-medium leading-none">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+              Rolling with a consistent pattern{" "}
+              <TrendingUp className="h-4 w-4" />
             </div>
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              January - June 2024
+              Tracking the outcomes of dice rolls over the last 6 rolls
             </div>
           </div>
         </div>
