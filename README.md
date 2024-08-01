@@ -38,27 +38,10 @@ Go to the project directory
 Run server with docker
 
 ```bash
-  docker-compose up --build
-```
-Go to the client directory
-
-```bash
-  cd client
-```
-Install dependencies
-
-```bash
-  npm install
+  docker-compose up --build -d
 ```
 
-Start client
-
-```bash
-  npm run dev
-```
-
-- [Open in browser](https://localhost:5173)
-- http//localhost:5173
+visit http://localhost:4173
 
 
 ## Tech Stack
