@@ -79,6 +79,7 @@ function sendStatsToClient(diceStats) {
       six: diceStats.six,
       total: diceStats.total,
     });
+
   } else {
     console.error("io object is not properly initialized");
   }

@@ -3,6 +3,7 @@ version: "3.8"
 networks:
   my_network:
     driver: bridge
+
 services:
   zookeeper:
     image: zookeeper:latest
@@ -29,18 +30,17 @@ services:
       - ./server:/usr/src/app
     environment:
       NODE_ENV: development
-      KAFKA_BROKER: PLAINTEXT://kafka:9092 # Environment variable for Kafka broker
+      KAFKA_BROKER: PLAINTEXT://kafka:9092
     depends_on:
       - kafka
 
-  # client:
-  #   build: ./client
-  #   ports:
-  #     - "5173:5173"
-  #   volumes:
-  #     - ./client:/app
-  #     - /app/node_modules
-  #   environment:
-  #     NODE_ENV: development
-  #   networks:
-  #     - my_network
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "4173:4173"
+    environment:
+      NODE_ENV: production
+    networks:
+      - my_network

@@ -17,6 +17,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { getSocket } from "@/socket";
+import { DiceStats } from "../../types";
 
 const initialChartData = [
   { result: "one", value: 0 },
@@ -27,36 +28,50 @@ const initialChartData = [
   { result: "six", value: 0 },
 ];
 
-const chartConfig = {
+const colors = [
+  "hsl(10, 70%, 50%)",
+  "hsl(60, 70%, 50%)",
+  "hsl(120, 70%, 50%)",
+  "hsl(180, 70%, 50%)",
+  "hsl(240, 70%, 50%)",
+  "hsl(300, 70%, 50%)",
+];
+
+const chartConfig: ChartConfig = {
   one: {
     label: "One",
-    color: "hsl(var(--chart-1))",
+    color: colors[0],
   },
   two: {
     label: "Two",
-    color: "hsl(var(--chart-2))",
+    color: colors[1],
   },
   three: {
     label: "Three",
-    color: "hsl(var(--chart-3))",
+    color: colors[2],
   },
   four: {
     label: "Four",
-    color: "hsl(var(--chart-4))",
+    color: colors[3],
   },
   five: {
     label: "Five",
-    color: "hsl(var(--chart-5))",
+    color: colors[4],
   },
   six: {
     label: "Six",
-    color: "hsl(var(--chart-6))",
+    color: colors[5],
   },
 } satisfies ChartConfig;
 
-function transformSocketData(data :any) {
+console.log(chartConfig);
+
+function transformSocketData(data: DiceStats) {
   const keys = ["one", "two", "three", "four", "five", "six"];
-  return keys.map((key) => ({ result: key, value: data[key] }));
+  return keys.map((key) => ({
+    result: key,
+    value: data[key as keyof DiceStats],
+  }));
 }
 
 export function BarChartMixed() {
@@ -67,7 +82,7 @@ export function BarChartMixed() {
 
   useEffect(() => {
     if (socket) {
-      socket.on("DICE_STATS", (data) => {
+      socket.on("DICE_STATS", (data: DiceStats) => {
         console.log("Received data:", data);
         setChartData(transformSocketData(data));
         setTotal(data.total);
@@ -100,9 +115,9 @@ export function BarChartMixed() {
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) =>
-                chartConfig[value as keyof typeof chartConfig]?.label
-              }
+              // tickFormatter={(value) =>
+              //   chartConfig[value as keyof typeof chartConfig]?.label || ""
+              // }
             />
             <XAxis dataKey="value" type="number" hide />
             <ChartTooltip

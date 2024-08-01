@@ -1,6 +1,5 @@
 import { TrendingUp } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
-
 import {
   Card,
   CardContent,
@@ -17,10 +16,11 @@ import {
 } from "@/components/ui/chart";
 import { getSocket } from "@/socket";
 import { useEffect, useState } from "react";
+import { ChartData, RollData } from "@/types";
 
-const initialChartData:any = [];
+const initialChartData: ChartData[] = [];
 
-const chartConfig = {
+const chartConfig: ChartConfig = {
   value: {
     label: "Dice Output",
     color: "hsl(var(--chart-4))",
@@ -28,12 +28,12 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function LineChartDots() {
-  const [chartData, setChartData] = useState(initialChartData);
+  const [chartData, setChartData] = useState<ChartData[]>(initialChartData);
   const socket = getSocket();
 
   useEffect(() => {
     if (socket) {
-      const handleNewRoll = (data: any) => {
+      const handleNewRoll = (data: RollData) => {
         console.log("Received data:", data);
 
         // Ensure the data is in the expected format
@@ -43,7 +43,7 @@ export function LineChartDots() {
           typeof data.output === "number"
         ) {
           // Map to chart data format
-          setChartData((prevData:any) => [
+          setChartData((prevData) => [
             ...prevData,
             { sequence: data.sequence, value: data.output },
           ]);
