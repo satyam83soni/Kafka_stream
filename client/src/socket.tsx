@@ -13,7 +13,7 @@ interface SocketProviderProps {
 
 const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const socket = useMemo(() => {
-    const socketInstance = io("43.205.212.223");
+    const socketInstance = io("http://13.126.183.149:3000");
 
     socketInstance.on("connect", () => {
       console.log("Connected to the server");

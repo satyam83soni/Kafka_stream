@@ -9,7 +9,7 @@ export function cn(...inputs: ClassValue[]) {
 const handleSubmit = async (times: number): Promise<void> => {
 
   try {
-    const response = await fetch(`http://localhost:3000/generate?times=${times}`, {
+    const response = await fetch(`http://13.126.183.149:3000/generate?times=${times}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ const handleSubmit = async (times: number): Promise<void> => {
 const handleStop = async (): Promise<void> => {
 
   try {
-    const response = await fetch(`http://localhost:3000/stop`, {
+    const response = await fetch(`http://13.126.183.149:3000/stop`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ const handleStop = async (): Promise<void> => {
 const handleClear = async (): Promise<void> => {
 
   try {
-    const response = await fetch(`http://localhost:3000/clear`, {
+    const response = await fetch(`http://13.126.183.149:3000/clear`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
